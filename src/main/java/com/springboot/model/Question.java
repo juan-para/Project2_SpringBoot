@@ -8,11 +8,6 @@ public class Question {
 	private String correctAnswer;
 	private List<String> options;
 
-	// Needed by Caused by: com.fasterxml.jackson.databind.JsonMappingException:
-	// Can not construct instance of com.in28minutes.springboot.model.Question:
-	// no suitable constructor found, can not deserialize from Object value
-	// (missing default constructor or creator, or perhaps need to add/enable
-	// type information?)
 	public Question() {
 
 	}
