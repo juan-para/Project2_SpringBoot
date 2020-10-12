@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.springboot.model.Question;
+import com.springboot.model.Survey;
 import com.springboot.service.SurveyService;
 
 @RestController
@@ -25,26 +26,32 @@ public class SurveyController {
 	public List<Question> retrieveQuestionsForSurvey(@PathVariable String surveyId) {
 		return surveyService.retrieveQuestions(surveyId);
 	}
-	
+
 	@PostMapping("/surveys/{surveyId}/questions")
 	public ResponseEntity<Void> addQuestionsToSurvey(@PathVariable String surveyId, @RequestBody Question newQuestion) {
 //		@RequestBody, it takes the data from the json (via postman) and it's mapped to the question object
 		Question question = surveyService.addQuestion(surveyId, newQuestion);
-		
-		if (question==null) {
+
+		if (question == null) {
 //			Error 204: No content
 			return ResponseEntity.noContent().build();
 		}
-		
+
 //		Append the new question id into the url
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(question.getId()).toUri();
-		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{questionId}")
+				.buildAndExpand(question.getId()).toUri();
+
 //		Returning a created status back
 		return ResponseEntity.created(location).build();
-	}	
-	
+	}
+
 	@GetMapping("/surveys/{surveyId}/questions/{questionId}")
 	public Question retrieveDetailsForQuestion(@PathVariable String surveyId, @PathVariable String questionId) {
 		return surveyService.retrieveQuestion(surveyId, questionId);
-	}	
+	}
+
+	@GetMapping("/surveys")
+	public List<Survey> retrieveDetailsForQuestion() {
+		return surveyService.retrieveAllSurveys();
+	}
 }
