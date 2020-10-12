@@ -51,7 +51,7 @@ public class SurveyController {
 	}
 
 	@GetMapping("/surveys")
-	public List<Survey> retrieveDetailsForQuestion() {
+	public List<Survey> retrieveAllSurveys() {
 		return surveyService.retrieveAllSurveys();
 	}
 }
