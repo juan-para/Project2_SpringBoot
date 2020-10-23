@@ -9,7 +9,10 @@ public class Question {
 	private List<String> options;
 
 	public Question() {
-
+		this.id = "";
+		this.description = "";
+		this.correctAnswer = "";
+		this.options = null;
 	}
 
 	public Question(String id, String description, String correctAnswer,
