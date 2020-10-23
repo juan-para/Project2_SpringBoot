@@ -13,7 +13,9 @@ import com.springboot.model.Survey;
 
 @Component
 public class SurveyService {
+	
 	private static List<Survey> surveys = new ArrayList<>();
+	
 	static {
 		Question question1 = new Question("Question1",
 				"Largest Country in the World", "Russia", Arrays.asList(
