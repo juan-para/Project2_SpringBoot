@@ -8,4 +8,6 @@ public interface UserRepository extends CrudRepository<User, Long>{
 
 //	Role is already defined in the bean
 	List<User> findByRole(String role);
+	List<User> findByRoleOrderByName(String role);
+	List<User> findByNameAndRole(String name, String role);
 }
