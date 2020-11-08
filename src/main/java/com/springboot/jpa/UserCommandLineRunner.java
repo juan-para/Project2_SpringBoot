@@ -30,8 +30,15 @@ public class UserCommandLineRunner implements CommandLineRunner {
 		}
 		
 		System.out.println("Admin user are:");
-		
 		for (User user : repository.findByRole("admin")) {
+			log.info(user.toString());
+		}
+		System.out.println("Admin role order by name desc:");
+		for (User user : repository.findByRoleOrderByName("admin")) {
+			log.info(user.toString());
+		}
+		System.out.println("Admin role and name:");
+		for (User user : repository.findByNameAndRole("Agustina", "user")) {
 			log.info(user.toString());
 		}
 	}
