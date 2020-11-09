@@ -38,7 +38,7 @@ public class UserCommandLineRunner implements CommandLineRunner {
 			log.info(user.toString());
 		}
 		System.out.println("Admin role and name:");
-		for (User user : repository.findByNameAndRole("Agustina", "user")) {
+		for (User user : repository.findByNameAndRole("Agustina", "admin")) {
 			log.info(user.toString());
 		}
 	}
