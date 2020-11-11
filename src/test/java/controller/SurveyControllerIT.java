@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -29,21 +30,20 @@ public class SurveyControllerIT {
 	@LocalServerPort
 	private int port;
 
+	TestRestTemplate restTemplate = new TestRestTemplate();
+	HttpHeaders headers = new HttpHeaders();
+
+	@Before
+	public void before() {
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));	
+	}
+	
 	@Test
 	public void SurveyRetrieveSurveyQuestion() {
-		System.out.println("Random port: " + port);
-		String url = "http://localhost:" + port + "/surveys/Survey1/questions/Question1";
-		TestRestTemplate restTemplate = new TestRestTemplate();
-//		String output = restTemplate.getForObject(url, String.class);
-//		System.out.println("Response: " + output); 
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		String url = createURLWithPort("/surveys/Survey1/questions/Question1");
 
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-//		System.out.println("Response: " + response); 
 
 		assertTrue(response.getBody().contains("\"id\":\"Question1\""));
 		assertTrue(response.getBody().contains("\"description\":\"Largest Country in the World\""));
@@ -60,15 +60,12 @@ public class SurveyControllerIT {
 
 	@Test
 	public void retrieveAllSurveyQuestions() throws Exception {
-		String url = "http://localhost:" + port + "/surveys/Survey1/questions";
-		TestRestTemplate restTemplate = new TestRestTemplate();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-		ResponseEntity<List<Question>> response = restTemplate.exchange(url, HttpMethod.GET,
-				new HttpEntity<String>(null, headers), new ParameterizedTypeReference<List<Question>>() {
-				});
+		ResponseEntity<List<Question>> response = restTemplate.exchange(
+				createURLWithPort("/surveys/Survey1/questions"),
+				HttpMethod.GET, 
+				new HttpEntity<String>(null, headers),
+				new ParameterizedTypeReference<List<Question>>() {}
+		);
 
 		Question sampleQuestion = new Question("Question1", "Largest Country in the World", "Russia",
 				Arrays.asList("India", "Russia", "United States", "China"));
@@ -76,18 +73,22 @@ public class SurveyControllerIT {
 		assertTrue(response.getBody().contains(sampleQuestion));
 	}
 
+	private String createURLWithPort(String uri) {
+		return "http://localhost:" + port + uri;
+	}
+
 	@Test
 	public void addQuestion() {
-		String url = "http://localhost:" + port + "/surveys/Survey1/questions";
-		TestRestTemplate restTemplate = new TestRestTemplate();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		Question body = new Question("", "Test question", "Test correct answer",
 				Arrays.asList("test option 1", "test option 2"));
 
 		HttpEntity<Question> entity = new HttpEntity<Question>(body, headers);
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(
+				createURLWithPort("/surveys/Survey1/questions"), 
+				HttpMethod.POST, 
+				entity, 
+				String.class
+		);
 
 		String actual = response.getHeaders().get(HttpHeaders.LOCATION).get(0);
 
